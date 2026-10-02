@@ -7,33 +7,36 @@
 <meta name="description" content="Calcola risoluzione, peso del fotogramma, bitrate e peso di un video non compresso, in bit e in Byte.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout: pannello input a sinistra (4 passi), risultati a destra come catena pixel → fotogramma → bitrate → video */
 :root{
-  --bg:#EEF1F2; --surface:#FFFFFF; --surface-2:#F5F7F8;
-  --ink:#283033; --muted:#65737A; --line:#D7DEE1;
-  --accent:#E06A64; --accent-ink:#B5433D; --on-accent:#FFFFFF; --accent-soft:#FBE8E6;
-  --band:#3B4548; --on-band:#FFFFFF; --band-muted:#B9C4C8; --band-accent:#FFB0AA;
-  --f-display:"Playfair Display", Georgia, "Times New Roman", serif;
+  --bg:#EEF2EC; --surface:#FFFFFF; --surface-2:#F4F7F2;
+  --ink:#1F2A1C; --muted:#5E6B59; --line:#D5DDD1;
+  --accent:#478031; --accent-ink:#3A6B27; --on-accent:#FFFFFF; --accent-soft:#E8F2DE;
+  --band:#26401D; --on-band:#FFFFFF; --band-muted:#B5C9A9; --band-accent:#8BC051;
+  --logo-light:#8BC051; --logo-mid:#478031; --logo-dark:#26401D;
+  --f-display:Lato, "Segoe UI", Helvetica, Arial, sans-serif;
   --f-body:Lato, "Segoe UI", Helvetica, Arial, sans-serif;
   --f-mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
   --r:10px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#15191B; --surface:#1E2427; --surface-2:#252C30;
-    --ink:#E6EBED; --muted:#9AA7AD; --line:#323B40;
-    --accent:#E8736D; --accent-ink:#F4A09B; --on-accent:#1A0F0E; --accent-soft:#3A2321;
-    --band:#262E32; --on-band:#F1F4F5; --band-muted:#94A2A8; --band-accent:#FFB0AA;
+    --bg:#111710; --surface:#192118; --surface-2:#20291E;
+    --ink:#E5ECE1; --muted:#9BAA94; --line:#2E3A2B;
+    --accent:#8BC051; --accent-ink:#A9D57C; --on-accent:#13200E; --accent-soft:#25351C;
+    --band:#1D3016; --on-band:#F0F5EC; --band-muted:#9DB58F; --band-accent:#A9D57C;
+    --logo-light:#8BC051; --logo-mid:#5E9C43; --logo-dark:#E5ECE1;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#15191B; --surface:#1E2427; --surface-2:#252C30;
-  --ink:#E6EBED; --muted:#9AA7AD; --line:#323B40;
-  --accent:#E8736D; --accent-ink:#F4A09B; --on-accent:#1A0F0E; --accent-soft:#3A2321;
-  --band:#262E32; --on-band:#F1F4F5; --band-muted:#94A2A8; --band-accent:#FFB0AA;
+  --bg:#111710; --surface:#192118; --surface-2:#20291E;
+  --ink:#E5ECE1; --muted:#9BAA94; --line:#2E3A2B;
+  --accent:#8BC051; --accent-ink:#A9D57C; --on-accent:#13200E; --accent-soft:#25351C;
+  --band:#1D3016; --on-band:#F0F5EC; --band-muted:#9DB58F; --band-accent:#A9D57C;
+  --logo-light:#8BC051; --logo-mid:#5E9C43; --logo-dark:#E5ECE1;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -45,7 +48,11 @@ h1,h2,h3{margin:0;text-wrap:balance}
 
 /* header */
 .top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:16px;border-bottom:3px solid var(--accent);margin-bottom:20px}
-.top h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,4.2vw,44px);line-height:1.05;letter-spacing:-.5px}
+.top h1{font-family:var(--f-display);font-weight:900;font-size:clamp(28px,4.2vw,42px);line-height:1.05;letter-spacing:-.6px}
+.brand{display:flex;align-items:center;gap:18px;flex-wrap:wrap;min-width:0}
+.brand svg{height:58px;width:auto;flex:none;max-width:100%}
+.brand .divider{width:1.5px;align-self:stretch;background:var(--line)}
+.logo-l{fill:var(--logo-light)}.logo-m{fill:var(--logo-mid)}.logo-d{fill:var(--logo-dark)}
 .top h1 em{font-style:normal;color:var(--accent-ink)}
 .top p{margin:4px 0 0;color:var(--muted);max-width:60ch}
 .base{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
@@ -119,7 +126,9 @@ tr.sep td{background:var(--surface-2);font-family:var(--f-body);font-size:11.5px
 td.hl{color:var(--accent-ink);font-weight:600;background:var(--accent-soft)}
 .note{font-size:13px;color:var(--muted);margin:10px 0 0}
 .note b{color:var(--ink)}
-footer{margin-top:24px;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+footer{margin-top:28px;font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:10px}
+footer .credits{border-top:3px solid var(--accent);padding-top:12px;font-size:14px;color:var(--ink)}
+footer .credits b{color:var(--accent-ink)}
 
 @media (max-width:900px){
   .main{grid-template-columns:minmax(0,1fr)}
@@ -142,9 +151,13 @@ footer{margin-top:24px;font-size:12.5px;color:var(--muted);display:flex;flex-wra
 <body>
 <div class="wrap">
   <header class="top">
-    <div>
+    <div class="brand">
+      <svg viewBox="0 0 546.2 202.53" role="img" aria-label="Istituto Tecnico Marinoni Udine"><polygon class="logo-l" points="376.29 0 357.46 22.33 338.71 44.56 273.19 122.23 207.86 44.66 245.42 0 273.27 32.73 301.13 0 376.29 0"/><polygon class="logo-m" points="495.36 141.63 457.62 141.62 420.61 141.63 338.71 44.56 357.46 22.33 376.29 0 495.36 141.63"/><polygon class="logo-d" points="144.43 151.2 182.83 202.53 101.49 202.53 144.43 151.2"/><rect class="logo-d" x="261.51" y="150.82" width="5.67" height="51.69"/><polygon class="logo-d" points="336.46 202.51 291.04 163.31 291.03 202.51 284.98 202.51 284.99 150.82 330.41 190.02 330.41 150.82 336.46 150.82 336.46 202.51"/><polygon class="logo-d" points="472.08 202.51 426.66 163.31 426.66 202.51 420.61 202.51 420.61 150.82 466.03 190.02 466.03 150.82 472.08 150.82 472.08 202.51"/><path class="logo-d" d="M378.53,202.53c-15.950,0-28.92-11.6-28.92-25.86s12.97-25.86,28.92-25.860,28.92,11.6,28.92,25.86-12.97,25.86-28.92,25.86ZM378.53,155.92c-13.13,0-23.810,9.31-23.810,20.75s10.68,20.75,23.810,20.75,23.81-9.31,23.81-20.75-10.68-20.75-23.81-20.75Z"/><polygon class="logo-d" points="502.74 150.84 482.6 150.84 525.59 202.53 546.2 202.53 502.74 150.84"/><polygon class="logo-d" points="237.91 202.53 246.65 202.53 221.47 182.91 247.95 150.8 196.38 150.8 196.38 202.43 201.75 202.43 201.75 156.17 236.57 156.17 213.82 183.75 237.91 202.53"/><polygon class="logo-m" points="245.42 0 207.86 44.66 75.1 202.48 37.43 202.48 37.39 202.53 0 202.53 170.26 0 245.42 0"/><polygon class="logo-d" points="420.61 141.63 406.95 141.63 338.82 60.36 273.42 138.43 207.84 60.35 88.34 202.48 75.1 202.48 207.86 44.66 273.19 122.23 338.71 44.56 420.61 141.63"/></svg>
+      <span class="divider" aria-hidden="true"></span>
+      <div>
       <h1>Calcolatore <em>peso video</em></h1>
       <p>Scegli risoluzione, profondità di colore, framerate e durata: il calcolatore mostra ogni passaggio, in bit e in Byte, per un video non compresso.</p>
+      </div>
     </div>
     <div class="base">
       <span class="lbl">Multipli</span>
@@ -255,7 +268,10 @@ footer{margin-top:24px;font-size:12.5px;color:var(--muted);display:flex;flex-wra
     </div>
   </div>
 
-  <footer><span>Pixel = L × A → Fotogramma = Pixel × bit → Bitrate = Fotogramma × fps → Peso = Bitrate × secondi</span><span>1 Byte = 8 bit</span></footer>
+  <footer>
+    <div class="formule">Pixel = L × A → Fotogramma = Pixel × bit → Bitrate = Fotogramma × fps → Peso = Bitrate × secondi <span class="sep">·</span> 1 Byte = 8 bit</div>
+    <div class="credits">Progetto a cura di <b>Tommaso Pecile</b> e <b>Christian Gentilini</b> · Dipartimento di Grafica e Comunicazione</div>
+  </footer>
 </div>
 
 <script>
