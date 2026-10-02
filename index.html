@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Calcolatore peso video</title>
 <meta name="description" content="Calcola risoluzione, peso del fotogramma, bitrate e peso di un video non compresso, in bit e in Byte.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,6 +41,7 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
 .wrap{max-width:1240px;margin:0 auto;padding-inline:20px;padding-block:28px 40px}
 h1,h2,h3{margin:0;text-wrap:balance}
@@ -130,20 +131,61 @@ footer{margin-top:28px;font-size:12.5px;color:var(--muted);display:flex;flex-dir
 footer .credits{border-top:3px solid var(--accent);padding-top:12px;font-size:14px;color:var(--ink)}
 footer .credits b{color:var(--accent-ink)}
 
+@media (min-width:901px){
+  /* header e riepilogo sempre visibili in alto mentre si scorre */
+  .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:21;background:var(--bg);box-shadow:-20px 0 0 var(--bg),20px 0 0 var(--bg);padding-top:14px;margin-top:-14px;transition:padding .2s}
+  .top .brand svg,.top h1{transition:height .2s,font-size .2s}
+  .is-scrolled .top{padding-top:10px;padding-bottom:10px}
+  .is-scrolled .top p,.is-scrolled .base .lbl{display:none}
+  .is-scrolled .top .brand svg{height:34px}
+  .is-scrolled .top h1{font-size:26px}
+  .is-scrolled .base .seg label{padding:5px 10px}
+  .flow{position:sticky;top:calc(var(--head-h,0px) + 12px);z-index:20;box-shadow:0 0 0 12px var(--bg),0 10px 24px -8px rgba(0,0,0,.35)}
+}
 @media (max-width:900px){
   .main{grid-template-columns:minmax(0,1fr)}
-  .flow{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .flow .st:nth-child(3){border-left:none}
+  /* header compatto, sempre visibile in alto */
+  .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);margin-inline:-20px;padding:10px 20px;margin-bottom:16px;border-bottom-width:2px;flex-wrap:nowrap;align-items:center;gap:12px}
+  .top p,.base .lbl,.brand .divider{display:none}
+  .brand{gap:10px;flex-wrap:nowrap}
+  .brand svg{height:26px}
+  .top h1{font-size:clamp(17px,4.6vw,22px);letter-spacing:-.3px;white-space:nowrap}
+  .base .seg{flex-wrap:nowrap;gap:4px}
+  .base .seg label{padding:5px 8px;font-size:12.5px}
+  .base .seg label small{display:none}
+  .base .seg label{white-space:nowrap}
+  /* riepilogo fisso sul bordo inferiore */
+  .flow{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;border-radius:14px 14px 0 0;grid-template-columns:repeat(2,minmax(0,1fr));padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -6px 24px rgba(0,0,0,.25)}
+  .flow .st,.flow .st + .st{padding:8px 16px}
+  .flow .st:nth-child(odd){border-left:none}
   .flow .st:nth-child(n+3){border-top:1px solid rgba(255,255,255,.12)}
-  .flow .st:nth-child(2) .op{display:none}
-}
-@media (max-width:900px){.flow .st:nth-child(3){padding-left:16px}}
-@media (max-width:520px){
-  .flow .st + .st{padding-left:16px}
-  .pair{grid-template-columns:minmax(0,1fr)}
-  .flow{grid-template-columns:minmax(0,1fr)}
-  .flow .st + .st{border-left:none;border-top:1px solid rgba(255,255,255,.12)}
+  .flow .k{font-size:10px;letter-spacing:.7px}
+  .flow .v{font-size:16px;margin-top:0}
+  .flow .v2{font-size:11px}
   .flow .op{display:none}
+  .wrap{padding-bottom:calc(140px + env(safe-area-inset-bottom,0px))}
+}
+@media (max-width:520px){
+  .w-calc{display:none}
+  .top h1 em{text-transform:capitalize}
+  .pair{grid-template-columns:minmax(0,1fr)}
+  .wrap{padding-inline:16px}
+  .top{margin-inline:-16px;padding-inline:16px}
+  .flow .st,.flow .st + .st{padding:7px 12px}
+  .flow .v{font-size:15px}
+}
+@media (max-width:600px){
+  table{min-width:0;font-size:12px}
+  th,td{padding:6px 4px}
+  tbody td{font-size:10.5px;letter-spacing:-.3px}
+  tbody td:first-child{font-size:11.5px;letter-spacing:0}
+  .tbl-wrap{margin-inline:-4px}
+  thead th{white-space:normal;}
+  thead .long{display:none}
+  thead th{font-size:10px;letter-spacing:.4px}
+  tr.sep td{white-space:normal;font-size:10px;letter-spacing:.5px;padding-block:5px}
+  tr.sep .long{display:none}
+  .card{padding:14px 12px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -155,7 +197,7 @@ footer .credits b{color:var(--accent-ink)}
       <svg viewBox="0 0 546.2 202.53" role="img" aria-label="Istituto Tecnico Marinoni Udine"><polygon class="logo-l" points="376.29 0 357.46 22.33 338.71 44.56 273.19 122.23 207.86 44.66 245.42 0 273.27 32.73 301.13 0 376.29 0"/><polygon class="logo-m" points="495.36 141.63 457.62 141.62 420.61 141.63 338.71 44.56 357.46 22.33 376.29 0 495.36 141.63"/><polygon class="logo-d" points="144.43 151.2 182.83 202.53 101.49 202.53 144.43 151.2"/><rect class="logo-d" x="261.51" y="150.82" width="5.67" height="51.69"/><polygon class="logo-d" points="336.46 202.51 291.04 163.31 291.03 202.51 284.98 202.51 284.99 150.82 330.41 190.02 330.41 150.82 336.46 150.82 336.46 202.51"/><polygon class="logo-d" points="472.08 202.51 426.66 163.31 426.66 202.51 420.61 202.51 420.61 150.82 466.03 190.02 466.03 150.82 472.08 150.82 472.08 202.51"/><path class="logo-d" d="M378.53,202.53c-15.950,0-28.92-11.6-28.92-25.86s12.97-25.86,28.92-25.860,28.92,11.6,28.92,25.86-12.97,25.86-28.92,25.86ZM378.53,155.92c-13.13,0-23.810,9.31-23.810,20.75s10.68,20.75,23.810,20.75,23.81-9.31,23.81-20.75-10.68-20.75-23.81-20.75Z"/><polygon class="logo-d" points="502.74 150.84 482.6 150.84 525.59 202.53 546.2 202.53 502.74 150.84"/><polygon class="logo-d" points="237.91 202.53 246.65 202.53 221.47 182.91 247.95 150.8 196.38 150.8 196.38 202.43 201.75 202.43 201.75 156.17 236.57 156.17 213.82 183.75 237.91 202.53"/><polygon class="logo-m" points="245.42 0 207.86 44.66 75.1 202.48 37.43 202.48 37.39 202.53 0 202.53 170.26 0 245.42 0"/><polygon class="logo-d" points="420.61 141.63 406.95 141.63 338.82 60.36 273.42 138.43 207.84 60.35 88.34 202.48 75.1 202.48 207.86 44.66 273.19 122.23 338.71 44.56 420.61 141.63"/></svg>
       <span class="divider" aria-hidden="true"></span>
       <div>
-      <h1>Calcolatore <em>peso video</em></h1>
+      <h1><span class="w-calc">Calcolatore </span><em>peso video</em></h1>
       <p>Scegli risoluzione, profondità di colore, framerate e durata: il calcolatore mostra ogni passaggio, in bit e in Byte, per un video non compresso.</p>
       </div>
     </div>
@@ -258,7 +300,7 @@ footer .credits b{color:var(--accent-ink)}
         <div class="hd"><span class="n">5</span><h3>Tutte le conversioni</h3><span class="formula" id="convRule">bit ÷ 8 = Byte · multipli × 1000</span></div>
         <div class="tbl-wrap">
           <table>
-            <thead><tr><th>Unità</th><th>Fotogramma</th><th>Bitrate (al secondo)</th><th>Video</th></tr></thead>
+            <thead><tr><th>Unità</th><th>Fotogramma</th><th>Bitrate<span class="long"> (al secondo)</span></th><th>Video</th></tr></thead>
             <tbody id="convBody"></tbody>
           </table>
         </div>
@@ -451,13 +493,13 @@ footer .credits b{color:var(--accent-ink)}
     ]);
 
     // 5 table
-    var rows='<tr class="sep"><td colspan="4">In bit · la misura corretta per il bitrate</td></tr>';
+    var rows='<tr class="sep"><td colspan="4">In bit<span class="long"> · la misura corretta per il bitrate</span></td></tr>';
     for(var i=0;i<5;i++){
       var p=Math.pow(B,i);
       rows+="<tr><td>"+BIT_U[i]+"</td>"+
         cell(frBit/p,i===a.frBit.i)+cell(brBit/p,i===a.brBit.i,"/s")+cell(viBit/p,i===a.viBit.i)+"</tr>";
     }
-    rows+='<tr class="sep"><td colspan="4">In Byte · bit ÷ 8</td></tr>';
+    rows+='<tr class="sep"><td colspan="4">In Byte<span class="long"> · bit ÷ 8</span></td></tr>';
     for(i=0;i<5;i++){
       p=Math.pow(B,i);
       rows+="<tr><td>"+BYTE_U[i]+"</td>"+
@@ -470,6 +512,17 @@ footer .credits b{color:var(--accent-ink)}
   document.addEventListener("input",render);
   document.addEventListener("change",render);
   $("form").addEventListener("submit",function(e){e.preventDefault()});
+  // altezza dell'header sticky per posizionare il riepilogo sotto
+  var head=document.querySelector(".top"), rootEl=document.documentElement;
+  function setHead(){rootEl.style.setProperty("--head-h",head.getBoundingClientRect().height+"px");}
+  if(window.ResizeObserver) new ResizeObserver(setHead).observe(head);
+  setHead();
+  function onScroll(){
+    var y=window.scrollY||0, on=rootEl.classList.contains("is-scrolled");
+    if(!on&&y>80) rootEl.classList.add("is-scrolled");
+    else if(on&&y<10) rootEl.classList.remove("is-scrolled");
+  }
+  window.addEventListener("scroll",onScroll,{passive:true}); onScroll();
   render();
 })();
 </script>
